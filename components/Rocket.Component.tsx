@@ -1,30 +1,45 @@
-import React, { useRef } from 'react';
+import React, { MutableRefObject, RefObject, useRef } from 'react';
 import { GLTFLoader } from 'three/examples/jsm/Addons.js';
 import { useLoader, useFrame } from '@react-three/fiber';
 import { Mesh } from 'three';
+import { RigidBody } from '@react-three/rapier';
 
 const Rocket = () => {
 
-    const rocket = useLoader(GLTFLoader, "/3d/rocket/rocket.gltf")
-    const ref = useRef<Mesh>(null!)
+    const rocketModel = useLoader(GLTFLoader, "/3d/rocket/rocket.gltf")
+    const rocket = useRef<any>(null!)
+
+    const calculateImpulseOnAxisK = (iPointer: number, iRocket: number) => {
+        const impulse = (iPointer*10 - iRocket*10)^2
+        if(iPointer > iRocket){
+            console.log(impulse)
+            return impulse
+        }else if(iPointer < iRocket){
+            return -impulse
+        }else{
+            return 0
+        }
+    }
 
     useFrame((state, delta) => {
-        if(ref.current){
-            ref.current.rotation.y = -90;
-            ref.current.position.z = Math.sin(state.clock.getElapsedTime() * 2) - 30;
-            //ref.current.rotation.z = Math.cos(state.clock.getElapsedTime() * 3.5) / 9;
-            //ref.current.rotation.y += 0.001;
-
-            const x = ref.current.position.x * (state.pointer.x * state.viewport.width)*2;
-            const y = ref.current.position.y * (state.pointer.y * state.viewport.height)*2;
-            ref.current.position.set(x, y-2, 0);
+        if(rocket.current){
+            if(state.pointer.x){
+                const rocketPosition = rocket.current.translation()
+                rocket.current.applyImpulse({
+                    x: calculateImpulseOnAxisK(state.pointer.x, rocketPosition.x),
+                    y: calculateImpulseOnAxisK(state.pointer.y, rocketPosition.y),
+                    z: 0
+                })
+            }
         }
     })
 
     return (
-        <mesh ref={ref}>
-            <primitive object={rocket.scene} />
-        </mesh>
+        <RigidBody ref={rocket}>
+            <mesh>
+                <primitive object={rocketModel.scene} />
+            </mesh>
+        </RigidBody>
     )
 }
 

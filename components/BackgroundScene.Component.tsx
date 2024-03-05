@@ -1,5 +1,5 @@
 'use client';
-import React from 'react'
+import React, { Suspense } from 'react'
 import * as THREE from "three";
 
 
@@ -9,6 +9,7 @@ import Space from "./Space.Component";
 import Planet from './Planet.Component';
 import Rocket from './Rocket.Component';
 import { OrbitControls } from '@react-three/drei';
+import { Physics } from '@react-three/rapier';
 
 const BackgroundScene = () => {
 
@@ -43,8 +44,12 @@ const BackgroundScene = () => {
             <pointLight position={[0, 0, 0]} intensity={3} />
             <Space/>
             <SkyDome/>
-            <Planet />
-            <Rocket />
+            <Suspense>
+                <Physics gravity={[0,0,0]}>
+                    <Planet />
+                    <Rocket />
+                </Physics>
+            </Suspense>
             </Canvas>
         </div>
      )
