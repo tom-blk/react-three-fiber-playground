@@ -1,8 +1,8 @@
-import React, { MutableRefObject, RefObject, useRef } from 'react';
+import React, { useRef } from 'react';
 import { GLTFLoader } from 'three/examples/jsm/Addons.js';
 import { useLoader, useFrame } from '@react-three/fiber';
-import { Mesh } from 'three';
 import { RigidBody } from '@react-three/rapier';
+import { Trail } from '@react-three/drei';
 
 const Rocket = () => {
 
@@ -10,7 +10,7 @@ const Rocket = () => {
     const rocket = useRef<any>(null!)
 
     const calculateImpulseOnAxisK = (iPointer: number, iRocket: number) => {
-        const impulse = (iPointer*10 - iRocket*10)^2
+        const impulse = (iPointer - iRocket)^2
         if(iPointer > iRocket){
             console.log(impulse)
             return impulse
@@ -35,11 +35,23 @@ const Rocket = () => {
     })
 
     return (
-        <RigidBody ref={rocket}>
-            <mesh>
-                <primitive object={rocketModel.scene} />
-            </mesh>
-        </RigidBody>
+        <Trail 
+        width={7}
+        color={'#FF4F00'}
+        length={1.5}
+        decay={.1}
+        local={false}
+        stride={0}
+        interval={2}
+        attenuation={(width) => width}
+        >
+            <RigidBody ref={rocket}>
+                <mesh>
+                    <primitive object={rocketModel.scene} />
+                </mesh>
+            </RigidBody>
+        </Trail>
+        
     )
 }
 

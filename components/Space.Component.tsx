@@ -19,7 +19,7 @@ const Space = () => {
         meshRef.current.position.y = 0;  // adjust model position
       }, [scene]);
 
-    camera.position.z = 20;
+    camera.position.z = 50;
 
     useFrame((state) => {
         if(groupRef.current){
