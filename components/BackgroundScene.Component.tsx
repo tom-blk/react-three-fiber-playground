@@ -1,14 +1,14 @@
 'use client';
-import React, { useEffect } from 'react'
+import React from 'react'
 import * as THREE from "three";
 
 
-import { Canvas, useLoader, useThree } from "@react-three/fiber";
+import { Canvas, useThree } from "@react-three/fiber";
 
 import Space from "./Space.Component";
 import Planet from './Planet.Component';
 import Rocket from './Rocket.Component';
-import { OrbitControls } from 'three/examples/jsm/Addons.js';
+import { OrbitControls } from '@react-three/drei';
 
 const BackgroundScene = () => {
 
@@ -34,21 +34,10 @@ const BackgroundScene = () => {
         )   */
     }
 
-    const CameraController = () => {
-        const { camera, gl } = useThree();
-        useEffect(() => {
-           const controls = new OrbitControls(camera, gl.domElement);
-           return () => {
-              controls.dispose();
-           };
-        }, [camera, gl]);
-        return null;
-     };
-
     return (
         <div className={"w-full h-full"}>
             <Canvas shadows>
-            <CameraController />
+            <OrbitControls />
             <primitive object={new THREE.AxesHelper(150)} />
             <directionalLight position={[30, 10, 10]} intensity={2} />
             <pointLight position={[0, 0, 0]} intensity={3} />

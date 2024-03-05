@@ -1,7 +1,6 @@
 import React, {useRef} from 'react'
 import { useFrame, useLoader } from '@react-three/fiber'
 import { GLTFLoader } from 'three/examples/jsm/Addons.js'
-import * as THREE from 'three'
 import { Mesh } from 'three'
 
 const Planet = () => {

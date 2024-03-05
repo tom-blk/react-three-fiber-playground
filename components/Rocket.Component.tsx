@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { GLTFLoader } from 'three/examples/jsm/Addons.js';
 import { useLoader, useFrame } from '@react-three/fiber';
-import { Mesh, Object3D, Vector3 } from 'three';
+import { Mesh } from 'three';
 
 const Rocket = () => {
 
