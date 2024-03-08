@@ -4,28 +4,33 @@ import { GLTF, GLTFLoader } from 'three/examples/jsm/Addons.js'
 import { Group, Mesh, Object3DEventMap } from 'three'
 import { RapierRigidBody, RigidBody } from '@react-three/rapier'
 
-interface PlanetProps{
+interface AsteroidProps{
+    position: [number, number, number],
+    scale: [number, number, number],
+    speed: number,
     model: Group<Object3DEventMap>
 }
 
-const Planet = ({model}: PlanetProps) => {
+const Asteroid = (props: AsteroidProps) => {
+    const {position, scale, speed, model} = props
 
-    const ref = useRef<Mesh>(null!)
+    const meshRef = useRef<Mesh>(null!)
     const bodyRef = useRef<RapierRigidBody>(null!)
 
     useFrame(() => {
-        ref.current.rotation.y += 0.0008
+        meshRef.current.rotation.y += 0.008
+        bodyRef.current.applyImpulse({x: 0, y: -speed, z: 0}, true)
     })
 
-    //const texture = useLoader(GLTFLoader, "/3d/planets/aerial_rocks_02.gltf")
+    //const {scene} = useLoader(GLTFLoader, "/3d/planets/aerial_rocks_02.gltf")
 
     return (
         <RigidBody ref={bodyRef} restitution={1}>
-            <mesh ref={ref} position={[40, 0, -50]} scale={[0.5, 0.5, 0.5]} castShadow receiveShadow>
+            <mesh ref={meshRef} position={position} scale={scale} castShadow receiveShadow>
                 <primitive object={model} />
             </mesh>
         </RigidBody>
     )
     }
 
-export default Planet
+export default Asteroid

@@ -3,13 +3,16 @@ import React, { Suspense } from 'react'
 import * as THREE from "three";
 
 
-import { Canvas, useThree } from "@react-three/fiber";
+import { Canvas, useLoader, useThree } from "@react-three/fiber";
 
 import Space from "./Space.Component";
 import Planet from './Planet.Component';
 import { OrbitControls } from '@react-three/drei';
 import { Physics } from '@react-three/rapier';
 import RocketStatic from './RocketStatic.Component';
+import AsteroidStorm from './AsteroidStorm.Component';
+import Asteroid from './Asteroid.Component';
+import { GLTFLoader } from 'three/examples/jsm/Addons.js';
 
 const BackgroundScene = ({controls}: {controls: "autoPilot" | "mouse"}) => {
 
@@ -18,6 +21,8 @@ const BackgroundScene = ({controls}: {controls: "autoPilot" | "mouse"}) => {
     const texture = new THREE.CubeTextureLoader().load([
         textureUrl, textureUrl, textureUrl, textureUrl, textureUrl, textureUrl
     ])
+
+    const {scene: model} = useLoader(GLTFLoader, "/3d/planets/aerial_rocks_02.gltf")
 
     const SkyDome = () => {
 
@@ -42,7 +47,9 @@ const BackgroundScene = ({controls}: {controls: "autoPilot" | "mouse"}) => {
             <SkyDome/>
             <Suspense fallback={null}>
                 <Physics gravity={[0,0,0]}>
-                    <Planet />
+                    {/* <AsteroidStorm model={model}/> */}
+                    {/* <Asteroid model={model} scale={[0.1, 0.1, 0.1]} speed={30} position={[0,0,0]} /> */}
+                    <Planet model={model}/>
                     <RocketStatic controls={controls} />
                 </Physics>
             </Suspense>
