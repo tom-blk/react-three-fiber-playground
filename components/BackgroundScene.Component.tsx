@@ -11,7 +11,7 @@ import { OrbitControls } from '@react-three/drei';
 import { Physics } from '@react-three/rapier';
 import RocketStatic from './RocketStatic.Component';
 
-const BackgroundScene = () => {
+const BackgroundScene = ({controls}: {controls: "autoPilot" | "mouse"}) => {
 
     const textureUrl = "/3d/nebula/textures/emissive.jpg";
 
@@ -43,7 +43,7 @@ const BackgroundScene = () => {
             <Suspense fallback={null}>
                 <Physics gravity={[0,0,0]}>
                     <Planet />
-                    <RocketStatic />
+                    <RocketStatic controls={controls} />
                 </Physics>
             </Suspense>
             </Canvas>

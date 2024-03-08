@@ -1,6 +1,6 @@
 'use client';
 import React, {MutableRefObject, Suspense, useEffect, useRef} from 'react';
-import { Canvas, useFrame, useLoader } from '@react-three/fiber';
+import { Canvas, RootState, useFrame, useLoader } from '@react-three/fiber';
 import { Mesh,  } from 'three';
 import * as THREE from 'three';
 import { Trail } from '@react-three/drei';
@@ -9,9 +9,9 @@ import { OrbitControls } from '@react-three/drei';
 import { degToRad } from 'three/src/math/MathUtils.js';
 import { Physics, RapierRigidBody, RigidBody } from '@react-three/rapier';
 
-const MOVEMENT_SPEED = 0.08;
+const MOVEMENT_SPEED = 0.1;
 
-const Scene = () => {
+const Scene = ({controls}: {controls: "autoPilot" | "mouse"}) => {
     //Double line breaks because the code is long and complex. 
 
     const rocketModel = useLoader(GLTFLoader, "/3d/rocket/rocket.gltf")
@@ -20,7 +20,7 @@ const Scene = () => {
     const targetRef = useRef<Mesh>(null!);
 
 
-    const speed = 2;
+    const rotationSpeed = 1;
     const spherical = new THREE.Spherical();
     const rotationMatrix = new THREE.Matrix4();
     const targetQuaternion = new THREE.Quaternion();
@@ -35,7 +35,6 @@ const Scene = () => {
     useEffect(() => {
     //Run the updating functions once to start a recursive loop
         generateTarget();
-        updateRotationMatrix();
     }, [])
 
 
@@ -52,16 +51,17 @@ const Scene = () => {
         };
 
         animate(delta, impulseDirection);
+        updateRotationMatrix(state);
     });
 
 
     const animate = (delta: number, impulseDirection: {x: number, y: number, z: number}) => {
     // If the rocket is not at the target rotation, rotate it towards the target
         if(!rocketMeshRef.current.quaternion.equals(targetQuaternion)) {
-            const step = delta * speed
+            const step = delta * rotationSpeed
             rocketMeshRef.current.quaternion.rotateTowards(targetQuaternion, step);
-            rocketBodyRef.current.setAngularDamping(MOVEMENT_SPEED * 20);
-            rocketBodyRef.current.setLinearDamping(MOVEMENT_SPEED * 20);
+            rocketBodyRef.current.setAngularDamping(MOVEMENT_SPEED * 15);
+            rocketBodyRef.current.setLinearDamping(MOVEMENT_SPEED * 15);
         }
 
     // Stop the rocket from accelerating if it's at max velocity
@@ -85,22 +85,28 @@ const Scene = () => {
 
         targetRef.current.position.setFromSpherical( spherical );
 
-        setTimeout( generateTarget, 6000 );
+        setTimeout( generateTarget, 2000 );
     }
 
 
-    const updateRotationMatrix = () => {
+    const updateRotationMatrix = (state: RootState) => {
     // The mesh itself doesn't move, but the body does, so we need to create a vector from the body's position
         const rocketBodyRefVector = rocketBodyRef.current.translation();
-        rotationMatrix.lookAt(
-            new THREE.Vector3(rocketBodyRefVector.x, rocketBodyRefVector.y, rocketBodyRefVector.z),
-            targetRef.current.position, 
-            rocketMeshRef.current.up 
-        );
+        if(controls === "autoPilot"){
+            rotationMatrix.lookAt(
+                new THREE.Vector3(rocketBodyRefVector.x, rocketBodyRefVector.y, rocketBodyRefVector.z),
+                targetRef.current.position, 
+                rocketMeshRef.current.up 
+            );
+        }else if(controls === "mouse"){
+            rotationMatrix.lookAt(
+                new THREE.Vector3(rocketBodyRefVector.x, rocketBodyRefVector.y, rocketBodyRefVector.z),
+                new THREE.Vector3(state.pointer.x, state.pointer.y, 0), 
+                rocketMeshRef.current.up 
+            );
+        }
 
         targetQuaternion.setFromRotationMatrix( rotationMatrix );
-
-        setTimeout( updateRotationMatrix, 500 );
     }
 
 
@@ -162,10 +168,10 @@ const Scene = () => {
     );
 }
 
-const RocketStatic = () => {
+const RocketStatic = ({controls}: {controls: "autoPilot" | "mouse"}) => {
     return (
         <Suspense fallback={null}>
-            <Scene />
+            <Scene controls={controls}/>
         </Suspense>
     );
 }
