@@ -7,9 +7,9 @@ import { Canvas, useThree } from "@react-three/fiber";
 
 import Space from "./Space.Component";
 import Planet from './Planet.Component';
-import Rocket from './Rocket.Component';
 import { OrbitControls } from '@react-three/drei';
 import { Physics } from '@react-three/rapier';
+import RocketStatic from './RocketStatic.Component';
 
 const BackgroundScene = () => {
 
@@ -21,33 +21,29 @@ const BackgroundScene = () => {
 
     const SkyDome = () => {
 
-        const {scene} = useThree();
+        const {scene, viewport} = useThree();
 
         scene.background = texture;
 
         return null;
-
-        /* return(
-            <mesh scale={[100, 100, 100]} rotation={[20,0,200]} position={[0,0,0]}>
-                <sphereGeometry args={[1000, 32, 32]} />
-                <meshBasicMaterial map={texture} side={THREE.BackSide} />
-            </mesh>
-        )   */
     }
 
     return (
         <div className={"w-full h-full"}>
-            <Canvas shadows>
+            <Canvas gl={{
+                pixelRatio: window.devicePixelRatio,
+                antialias: true,
+            }} shadows>
             <OrbitControls />
-            <primitive object={new THREE.AxesHelper(150)} />
+            {/* <primitive object={new THREE.AxesHelper(150)} /> */}
             <directionalLight position={[30, 10, 10]} intensity={2} />
             <pointLight position={[0, 0, 0]} intensity={3} />
             <Space/>
             <SkyDome/>
-            <Suspense>
+            <Suspense fallback={null}>
                 <Physics gravity={[0,0,0]}>
                     <Planet />
-                    <Rocket />
+                    <RocketStatic />
                 </Physics>
             </Suspense>
             </Canvas>
