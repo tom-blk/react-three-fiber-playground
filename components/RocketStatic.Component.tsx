@@ -28,6 +28,7 @@ const Scene = ({controls}: {controls: "autoPilot" | "mouse"}) => {
 
 
     const rocketIsUnderMaxVel = (rocket: MutableRefObject<RapierRigidBody>, max: number) => {
+        if(rocketBodyRef.current)
         return rocket.current.linvel().x < max && rocket.current.linvel().y < max && rocket.current.linvel().z < max;
     }
 
@@ -50,8 +51,10 @@ const Scene = ({controls}: {controls: "autoPilot" | "mouse"}) => {
             z: -rocketForwardDirection.z * MOVEMENT_SPEED * delta
         };
 
-        animate(delta, impulseDirection);
-        updateRotationMatrix(state);
+        if(rocketBodyRef.current && rocketMeshRef.current){
+            animate(delta, impulseDirection);
+            updateRotationMatrix(state);
+        }
     });
 
 

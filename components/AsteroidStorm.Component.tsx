@@ -13,14 +13,14 @@ const AsteroidStorm = (props: AsteroidStormProps) => {
 
     return (
         <>
-            <Asteroid model={model} scale={[0.1, 0.1, 0.1]} speed={30} position={[0,0,0]} />
-            <Asteroid model={model} scale={[0.1, 0.1, 0.1]} speed={30} position={[3,26,5]} />
-            <Asteroid model={model} scale={[0.1, 0.1, 0.1]} speed={30} position={[7,35,10]} />
-            <Asteroid model={model} scale={[0.1, 0.1, 0.1]} speed={30} position={[-8,40,-8]} />
-            <Asteroid model={model} scale={[0.1, 0.1, 0.1]} speed={30} position={[10,33,-5]} />
-            <Asteroid model={model} scale={[0.1, 0.1, 0.1]} speed={30} position={[-7,31,11]} />
-            <Asteroid model={model} scale={[0.1, 0.1, 0.1]} speed={30} position={[6,29,12]} />
-            <Asteroid model={model} scale={[0.1, 0.1, 0.1]} speed={30} position={[1,38,-4]} />
+            <Asteroid model={model} scale={0.05} speed={0.001} position={[0,30,0]} />
+            <Asteroid model={model} scale={0.01} speed={0.003} position={[3,30,0]} />
+            <Asteroid model={model} scale={0.07} speed={0.0012} position={[5,30,0]} />
+            <Asteroid model={model} scale={0.02} speed={0.005} position={[-5,30,0]} />
+            <Asteroid model={model} scale={0.025} speed={0.0014} position={[4,30,0]} />
+            <Asteroid model={model} scale={0.01} speed={0.009} position={[-3,30,0]} />
+            <Asteroid model={model} scale={0.06} speed={0.004} position={[2,30,0]} />
+            <Asteroid model={model} scale={0.03} speed={0.007} position={[1,30,0]} />
         </>
     )
     }

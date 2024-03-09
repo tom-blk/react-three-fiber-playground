@@ -20,6 +20,7 @@ const Space = () => {
       }, [scene]);
 
     camera.position.z = 5;
+    camera.position.y = 30;
 
     useFrame((state) => {
         if(groupRef.current){
